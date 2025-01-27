@@ -255,6 +255,24 @@ where the key is emp id, how to do it? Use Java 8.
 You can store employees in a `HashMap` with the employee ID as the key. Here’s how you can do it using Java 8:
 
 ```java
+List<Employee> employees = Arrays.asList(
+        new Employee(1, "John", "HR", 25),
+        new Employee(2, "Jane", "Finance", 30),
+        new Employee(3, "Mike", "IT", 28),
+        new Employee(4, "Emily", "HR", 35)
+    );
+
+// Convert the list to a HashMap using Java 8 streams
+Map<Long, Employee> empMap = employees.stream()
+    .collect(Collectors.toMap(
+        emp -> emp.id, // Key: Employee id
+        emp -> emp     // Value: Employee object
+    ));
+```
+
+OR
+
+```java
 import java.util.HashMap;
 
 class Employee {
