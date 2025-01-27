@@ -231,9 +231,9 @@ Yes, `@Primary` can be used if you have multiple beans of the same type, and you
 
 ---
 
-### 10.
+### 10. Suppose this is a class
 
-````java
+```java
 class Employee {
 public long id;
 public String name;
@@ -241,12 +241,14 @@ public String depName;
 public int age;
 }
 ```
-Suppose this is a class, I want to store 1000 users in a HashMap like
+
+I want to store 1000 users in a HashMap like
+
 ```java
 HashMap<Long, Employee> emp = new HashMap<>();
 ```
-where the key is emp id, how to do it? Use Java 8.
 
+where the key is emp id, how to do it? Use Java 8.
 
 **Answer:**
 
@@ -402,4 +404,7 @@ public class Main {
 - **Nashorn JavaScript engine**
 
 ---
-````
+
+```
+
+```
