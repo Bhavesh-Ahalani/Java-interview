@@ -315,3 +315,250 @@ public class FlatMapExample {
 1. **`nestedList.stream()`**: Converts the outer list into a stream.
 2. **`flatMap(List::stream)`**: Takes each inner list, converts it into a stream, and flattens it into a single stream.
 3. **`collect(Collectors.toList())`**: Collects the flattened stream into a single list.
+
+---
+
+## 17. What is the Bean Lifecycle in Spring Boot?
+
+### Answer:
+
+The **bean lifecycle** in Spring Boot involves the process from the creation of a bean to its destruction within the Spring container. Here's the lifecycle in detail:
+
+1. **Instantiation**:
+
+   - The bean is instantiated using its constructor.
+
+2. **Populating Properties**:
+
+   - Dependencies are injected (via constructor, setter, or field injection).
+
+3. **Set Bean Name**:
+
+   - The `setBeanName()` method of `BeanNameAware` interface is called if implemented.
+
+4. **Set Bean Factory**:
+
+   - The `setBeanFactory()` method of `BeanFactoryAware` is called if implemented.
+
+5. **Post-Initialization**:
+
+   - Any `BeanPostProcessor` implementations process the bean (before and after initialization).
+
+6. **Custom Initialization**:
+
+   - The `afterPropertiesSet()` method of `InitializingBean` or custom methods annotated with `@PostConstruct` are executed.
+
+7. **Ready for Use**:
+
+   - The bean is fully initialized and ready to use.
+
+8. **Destruction**:
+   - When the application shuts down, `@PreDestroy` or methods in the `DisposableBean` interface are executed.
+
+### Example:
+
+```java
+@Component
+public class MyBean {
+
+    @PostConstruct
+    public void init() {
+        System.out.println("PostConstruct: Bean is initialized");
+    }
+
+    @PreDestroy
+    public void destroy() {
+        System.out.println("PreDestroy: Bean is about to be destroyed");
+    }
+}
+```
+
+---
+
+## 18. What Are Various Bean Lifecycle Scopes in Spring Boot?
+
+### Answer:
+
+The **scope** of a bean determines its lifecycle and visibility within the Spring container. Here are the types:
+
+### 1. Singleton Scope (Default):
+
+- **Description**: Single instance per Spring container.
+- **Example**:
+
+```java
+@Component
+public class SingletonBean {
+    public SingletonBean() {
+        System.out.println("Singleton instance created");
+    }
+}
+```
+
+### 2. Prototype Scope:
+
+- **Description**: New instance created every time the bean is requested.
+- **Example**:
+
+```java
+@Scope("prototype")
+@Component
+public class PrototypeBean {
+    public PrototypeBean() {
+        System.out.println("Prototype instance created");
+    }
+}
+```
+
+### 3. Request Scope (Web Applications Only):
+
+- **Description**: One instance per HTTP request.
+- **Example**:
+
+```java
+@Scope("request")
+@Component
+public class RequestScopedBean {
+    public RequestScopedBean() {
+        System.out.println("Request scoped instance created");
+    }
+}
+```
+
+### 4. Session Scope (Web Applications Only):
+
+- **Description**: One instance per HTTP session.
+- **Example**:
+
+```java
+@Scope("session")
+@Component
+public class SessionScopedBean {
+    public SessionScopedBean() {
+        System.out.println("Session scoped instance created");
+    }
+}
+```
+
+### 5. Application Scope:
+
+- **Description**: Shared across the entire application.
+- **Example**:
+
+```java
+@Scope("application")
+@Component
+public class ApplicationScopedBean {
+    public ApplicationScopedBean() {
+        System.out.println("Application scoped instance created");
+    }
+}
+```
+
+### 6. Custom Scope:
+
+- **Description**: Define a custom scope.
+- **Example**:
+
+```java
+@Scope("custom")
+@Component
+public class CustomScopedBean {
+    public CustomScopedBean() {
+        System.out.println("Custom scoped instance created");
+    }
+}
+```
+
+---
+
+## 19. How Do You Define Bean Scope in Spring Boot?
+
+### Answer:
+
+1. **Using Annotations**:
+
+   - Example:
+
+   ```java
+   @Component
+   @Scope("prototype")
+   public class MyBean {
+       public MyBean() {
+           System.out.println("Prototype instance created");
+       }
+   }
+   ```
+
+2. **Using Java Config**:
+
+   - Example:
+
+   ```java
+   @Bean
+   @Scope("singleton")
+   public MyBean myBean() {
+       return new MyBean();
+   }
+   ```
+
+3. **Using XML Config**:
+   - Example:
+   ```xml
+   <bean id="myBean" class="com.example.MyBean" scope="prototype" />
+   ```
+
+---
+
+## 20. How Do You Manage Memory in Java?
+
+### Answer:
+
+Memory management in Java is handled automatically by the **Java Virtual Machine (JVM)** through garbage collection. Here are the key aspects:
+
+### 1. Memory Areas:
+
+- **Heap Memory**: Used to store objects and JRE classes.
+- **Stack Memory**: Stores method calls and local variables.
+- **Metaspace**: Stores class metadata (introduced in Java 8).
+
+### 2. Automatic Garbage Collection:
+
+- The JVM automatically identifies and removes objects that are no longer in use.
+- Common garbage collectors:
+  - Serial GC
+  - Parallel GC
+  - G1 GC
+  - ZGC
+
+### 3. Best Practices for Memory Management:
+
+- Use local variables wherever possible.
+- Avoid creating unnecessary objects.
+- Use appropriate data structures.
+- Explicitly set objects to `null` when they are no longer needed (optional).
+- Monitor memory usage using tools like **VisualVM**, **JConsole**, or profilers.
+
+### Example:
+
+```java
+public class MemoryExample {
+    public static void main(String[] args) {
+        // Create an object
+        String str = new String("Hello");
+
+        // Object becomes eligible for GC after setting it to null
+        str = null;
+
+        // Request garbage collection (not guaranteed to run immediately)
+        System.gc();
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        System.out.println("Garbage collected");
+    }
+}
+```
+
+---
