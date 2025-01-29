@@ -1,7 +1,5 @@
 ## 1. Java 21 Features
 
-**Answer:**
-
 1. **Record Patterns** - Enables deconstruction of records for pattern matching.
 2. **Virtual Threads** - Lightweight threads that significantly improve scalability.
 3. **Sequenced Collections** - Introduces interfaces like `SequencedCollection`, `SequencedSet`, `SequencedMap`.
@@ -13,8 +11,6 @@
 
 ## 2. Java 17 Features
 
-**Answer:**
-
 1. **Sealed Classes** - Restricts which classes can extend a superclass.
 2. **Pattern Matching for `switch` (Preview)** - Expands pattern matching capabilities.
 3. **New macOS Rendering Pipeline** - Uses Metal for rendering.
@@ -24,8 +20,6 @@
 ---
 
 ## 3. Java 11 Features
-
-**Answer:**
 
 1. **Var in Lambda Expressions** - Enables the use of `var` in lambda parameters.
 2. **New `String` Methods** - `isBlank()`, `lines()`, `strip()`, `repeat()`.
@@ -37,14 +31,12 @@
 
 ## 4. What is Actuator?
 
-**Answer:**  
 Spring Boot Actuator provides production-ready features such as monitoring, metrics, health checks, and logging.
 
 ---
 
 ## 5. How to Change Head URI in Actuator?
 
-**Answer:**  
 Update `management.endpoints.web.base-path` in `application.properties`:
 
 ```properties
@@ -55,7 +47,6 @@ management.endpoints.web.base-path=/new-actuator
 
 ## 6. N+1 Problem in Hibernate
 
-**Answer:**  
 Occurs when an initial query loads a list of entities, but additional queries fetch related data for each entity individually, leading to performance degradation.
 
 ### Solution:
@@ -68,8 +59,6 @@ Occurs when an initial query loads a list of entities, but additional queries fe
 ---
 
 ## 7. Hibernate Features
-
-**Answer:**
 
 ### 1. **Lazy & Eager Loading**
 
@@ -200,8 +189,6 @@ This ensures that the `addBook` method is wrapped in a transaction.
 
 ## 8. Difference Between Observable and Promise
 
-**Answer:**
-
 | Feature            | Observable | Promise |
 | ------------------ | ---------- | ------- |
 | Lazy Execution     | Yes        | No      |
@@ -212,8 +199,6 @@ This ensures that the `addBook` method is wrapped in a transaction.
 ---
 
 ## 9. Creating a Custom Immutable Class
-
-**Answer:**
 
 ### Rules for Creating an Immutable Class in Java:
 
@@ -289,8 +274,6 @@ public final class ImmutableClass {
 
 ## 10. Custom Linked List and Swap Nodes
 
-**Answer:**
-
 ```java
 class Node {
     int data;
@@ -342,8 +325,6 @@ class LinkedList {
 
 ## 11. Find Missing Element in Array from range 1 to 10
 
-**Answer:**
-
 ```java
 public class MissingNumber {
     public static void main(String[] args) {
@@ -359,8 +340,6 @@ public class MissingNumber {
 
 ## 12. What is `@Qualifier`?
 
-**Answer:**
-
 It is used to resolve bean conflicts when multiple beans of the same type exist.
 
 ```java
@@ -373,14 +352,12 @@ private MyService myService;
 
 ## 13. Why Use Interface with `@Autowired`?
 
-**Answer:**
 Using interfaces promotes loose coupling and enables dependency injection flexibility.
 
 ---
 
 ## 14. Can We Use a Class Instead of an Interface in `@Autowired`?
 
-**Answer:**
 Yes, but using a class instead of an interface reduces flexibility and breaks the Dependency Inversion Principle, effectively tightly coupling the code.
 
 ---

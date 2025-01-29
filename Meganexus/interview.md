@@ -1,6 +1,5 @@
-### 1. What if we use @Service annotation in repository layer and @Repository annotation in service layer, will it give any error?
+## 1. What if we use @Service annotation in repository layer and @Repository annotation in service layer, will it give any error?
 
-**Answer:**  
 No, the program will run without any errors, but it is semantically incorrect and violates the intended use of these annotations.
 
 - `@Service` should be used for service layer classes that contain business logic.
@@ -21,9 +20,8 @@ In short: While your program won't throw errors, it’s best to follow Spring's 
 
 ---
 
-### 2. How Spring does autoconfiguration?
+## 2. How Spring does autoconfiguration?
 
-**Answer:**  
 Spring Boot's autoconfiguration feature automatically configures Spring application contexts based on the libraries present in the classpath and predefined properties.
 
 - Spring Boot provides auto-configuration classes that attempt to configure beans based on the current environment.
@@ -32,9 +30,8 @@ Spring Boot's autoconfiguration feature automatically configures Spring applicat
 
 ---
 
-### 3. What if I don't use any annotation like @Service, @Bean, @Component, and use @Autowired for DI, will it work?
+## 3. What if I don't use any annotation like @Service, @Bean, @Component, and use @Autowired for DI, will it work?
 
-**Answer:**  
 No, it will not work. Spring's DI relies on annotations like `@Component`, `@Service`, `@Repository`, or explicit bean configuration using `@Bean`.
 
 - If you don’t annotate a class with `@Component`, Spring will not be able to identify it as a bean to be injected.
@@ -42,16 +39,14 @@ No, it will not work. Spring's DI relies on annotations like `@Component`, `@Ser
 
 ---
 
-### 4. Can we have a null key in HashMap?
+## 4. Can we have a null key in HashMap?
 
-**Answer:**  
 Yes, `HashMap` allows a null key. You can store one `null` key in a `HashMap`. However, be cautious, as using `null` as a key can introduce potential bugs and make it harder to debug.
 
 ---
 
-### 5. What is abstraction, how does it work? Can you give an example with the help of a program?
+## 5. What is abstraction, how does it work? Can you give an example with the help of a program?
 
-**Answer:**  
 Abstraction is the concept of hiding the complex implementation details and showing only the essential features of an object or system. It helps in simplifying the interaction with complex systems.
 
 - Abstract classes and interfaces are used to achieve abstraction in Java.
@@ -78,9 +73,8 @@ public class Main {
 
 ---
 
-### 6. How do you hide methods in abstraction? Give a code example.
+## 6. How do you hide methods in abstraction? Give a code example.
 
-**Answer:**  
 You can hide methods in abstraction by using abstract methods in abstract classes or interfaces. These methods are not implemented in the abstract class or interface, thus hiding their implementation from the user.
 
 - **Example (Java)**:
@@ -107,13 +101,9 @@ public class Main {
 
 In this Java example, the method `draw()` is declared as abstract in the `Shape` class and is implemented in the `Circle` class. The implementation is hidden from the user of `Shape` and only the abstract method is visible.
 
----
-
-### Spring Boot Example (Using Abstraction to Hide Methods)
+- **Example (Spring Boot)**:
 
 In a Spring Boot example, you can use the same principles of abstraction to hide methods inside service classes or components, allowing the interface to expose only the necessary methods.
-
-- **Example (Spring Boot)**:
 
 ```java
 import org.springframework.beans.factory.annotation.Autowired;
@@ -170,9 +160,8 @@ In this Spring Boot example, you can switch between the `Dog` or `Cat` implement
 
 ---
 
-### 7. Give an example where we use @Qualifier, also write a program for it?
+## 7. Give an example where we use @Qualifier, also write a program for it?
 
-**Answer:**  
 `@Qualifier` is used when you have multiple beans of the same type and want to specify which bean to inject. This helps to resolve ambiguity when Spring has more than one candidate to inject.
 
 - Example:
@@ -215,23 +204,21 @@ In this example, `@Qualifier("dog")` tells Spring to inject the `Dog` bean when 
 
 ---
 
-### 8. Can we use @Primary if we don't use @Qualifier?
+## 8. Can we use @Primary if we don't use @Qualifier?
 
-**Answer:**  
 Yes, `@Primary` can be used if you have multiple beans of the same type, and you want to specify the default bean to be injected. `@Qualifier` is not required when `@Primary` is used.
 
 ---
 
-### 9. What is ApplicationContext in Spring?
+## 9. What is ApplicationContext in Spring?
 
-**Answer:**  
 `ApplicationContext` is a central interface to the Spring Framework that provides configuration, bean management, and environment abstraction. It is used to access Spring beans and handle the lifecycle and scope of those beans.
 
 - It is an extension of `BeanFactory` and is responsible for loading, managing, and wiring beans.
 
 ---
 
-### 10. Suppose this is a class
+## 10. Suppose this is a class
 
 ```java
 class Employee {
@@ -249,8 +236,6 @@ HashMap<Long, Employee> emp = new HashMap<>();
 ```
 
 where the key is emp id, how to do it? Use Java 8.
-
-**Answer:**
 
 You can store employees in a `HashMap` with the employee ID as the key. Here’s how you can do it using Java 8:
 
@@ -305,9 +290,7 @@ public class Main {
 
 ---
 
-### 11. Write a program in Java 8 to filter employees whose age is > 25 and give names.
-
-**Answer:**
+## 11. Write a program in Java 8 to filter employees whose age is > 25 and give names.
 
 ```java
 import java.util.*;
@@ -347,18 +330,16 @@ public class Main {
 
 ---
 
-### 12. What is a functional interface?
+## 12. What is a functional interface?
 
-**Answer:**
 A functional interface is an interface that has exactly one abstract method. It can have multiple default or static methods.
 
 - Example: `Runnable`, `Comparator`, `Callable`.
 
 ---
 
-### 13. Types of functional interfaces that Java provides?
+## 13. Types of functional interfaces that Java provides?
 
-**Answer:**
 Java provides several built-in functional interfaces in the `java.util.function` package:
 
 - `Predicate<T>`
@@ -370,9 +351,7 @@ Java provides several built-in functional interfaces in the `java.util.function`
 
 ---
 
-### 14. What is Predicate, Consumer?
-
-**Answer:**
+## 14. What is Predicate, Consumer?
 
 - **Predicate:** It represents a function that takes one argument and returns a boolean value. It is used for conditional checks.
   - Example: `Predicate<String> isEmpty = str -> str.isEmpty();`
@@ -381,18 +360,14 @@ Java provides several built-in functional interfaces in the `java.util.function`
 
 ---
 
-### 15. Which functional interface does `filter` and `map` use internally?
-
-**Answer:**
+## 15. Which functional interface does `filter` and `map` use internally?
 
 - `filter` uses `Predicate<T>` as it checks whether a condition is true or false.
 - `map` uses `Function<T, R>` as it transforms one type of object into another.
 
 ---
 
-### 16. Give an example of Predicate.
-
-**Answer:**
+## 16. Give an example of Predicate.
 
 ```java
 import java.util.function.Predicate;
@@ -408,21 +383,143 @@ public class Main {
 
 ---
 
-### 17. Java 8 features
+## 17. Java 8 features
 
-**Answer:**
+### Features List
 
-- **Lambda expressions**
-- **Streams API**
-- **Functional interfaces**
-- **Default and static methods in interfaces**
-- **New date and time API (java.time)**
-- **Optional class**
-- **Method references**
-- **Nashorn JavaScript engine**
+- Lambda Expressions
+- Streams API
+- Functional Interfaces
+- Default and Static Methods in Interfaces
+- New Date and Time API (java.time)
+- Optional Class
+- Method References
+- Nashorn JavaScript Engine
+
+### Detailed Explanations
+
+#### 1. Lambda Expressions
+
+Lambda expressions introduce functional programming to Java. They provide a clear and concise way to implement single-method interfaces (functional interfaces) using an expression. Lambda expressions are particularly useful for enabling more readable and maintainable code.
+
+Example:
+
+```java
+// Traditional approach
+Runnable runnable = new Runnable() {
+    @Override
+    public void run() {
+        System.out.println("Hello World!");
+    }
+};
+
+// Lambda expression
+Runnable runnable = () -> System.out.println("Hello World!");
+```
+
+### 2. Streams API
+
+The Streams API enables functional-style operations on streams of elements. A Stream represents a sequence of elements and supports various operations that can be chained to produce a desired result. It promotes parallel processing and helps write more concise and maintainable code.
+
+Example:
+
+```java
+List<String> names = Arrays.asList("John", "Peter", "Susan");
+names.stream()
+     .filter(name -> name.length() > 4)
+     .map(String::toUpperCase)
+     .forEach(System.out::println);
+```
+
+### 3. Functional Interfaces
+
+Functional interfaces are interfaces that contain exactly one abstract method. They can have multiple default or static methods but must have only one abstract method. Java 8 introduced the @FunctionalInterface annotation to mark these interfaces.
+
+Common functional interfaces:
+
+```java
+// Predicate
+Predicate<String> predicate = str -> str.length() > 5;
+
+// Consumer
+Consumer<String> consumer = str -> System.out.println(str);
+
+// Function
+Function<String, Integer> function = str -> str.length();
+```
+
+### 4. Default and Static Methods in Interfaces
+
+Default methods enable adding new methods to interfaces without breaking existing implementation classes. Static methods in interfaces help organize helper methods specific to an interface's purpose.
+
+Example:
+
+```java
+interface Vehicle {
+    default void startEngine() {
+        System.out.println("Starting engine...");
+    }
+
+    static boolean isVehicle(Object obj) {
+        return obj instanceof Vehicle;
+    }
+}
+```
+
+### 5. New Date and Time API (java.time)
+
+The java.time package provides a comprehensive date and time API that addresses the shortcomings of older date/time classes. It's immutable and thread-safe.
+
+Example:
+
+```java
+LocalDate date = LocalDate.now();
+LocalTime time = LocalTime.now();
+LocalDateTime dateTime = LocalDateTime.now();
+ZonedDateTime zonedDateTime = ZonedDateTime.now();
+```
+
+### 6. Optional Class
+
+Optional is a container object that may or may not contain a non-null value. It helps prevent null pointer exceptions and provides a clear way to handle null values.
+
+Example:
+
+```java
+Optional<String> optional = Optional.of("Hello");
+String result = optional.orElse("Default");
+
+optional.ifPresent(str -> System.out.println(str));
+```
+
+### 7. Method References
+
+Method references provide a way to refer to methods or constructors without executing them. They can be seen as shorthand notation for lambda expressions that only call a specific method.
+
+Example:
+
+```java
+// Lambda expression
+Consumer<String> lambda = str -> System.out.println(str);
+
+// Method reference
+Consumer<String> methodRef = System.out::println;
+```
+
+### 8. Nashorn JavaScript Engine
+
+Nashorn is a JavaScript engine developed to replace the older Rhino. It provides better performance and enables running JavaScript code from Java applications.
+
+Example:
+
+```java
+ScriptEngineManager manager = new ScriptEngineManager();
+ScriptEngine engine = manager.getEngineByName("nashorn");
+engine.eval("print('Hello from JavaScript!');");
+```
+
+## Conclusion
+
+Java 8 brought significant improvements to the language, making it more functional and expressive. These features have become fundamental to modern Java development, improving code readability, maintainability, and performance.
 
 ---
-
-```
-
-```
