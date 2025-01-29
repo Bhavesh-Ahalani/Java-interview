@@ -187,7 +187,170 @@ This ensures that the `addBook` method is wrapped in a transaction.
 
 ---
 
-## 8. Difference Between Observable and Promise
+## 8. Difference Between `Hashtable` and `ConcurrentHashMap`
+
+### 1. **Thread Safety**
+
+- **`Hashtable`:**  
+  `Hashtable` is **synchronized**. This means that all methods are thread-safe. However, this comes with a performance cost, as only one thread can access a method of the `Hashtable` at a time.
+
+- **`ConcurrentHashMap`:**  
+  `ConcurrentHashMap` is designed to provide thread safety in a more efficient way. It allows **concurrent read access** and enables updates to occur in parallel, thus improving performance compared to `Hashtable`.
+
+### 2. **Null Values**
+
+- **`Hashtable`:**  
+  Does not allow **null keys** or **null values**. Attempting to insert a `null` will throw a `NullPointerException`.
+
+- **`ConcurrentHashMap`:**  
+  Does not allow **null keys** or **null values** either. However, unlike `Hashtable`, it avoids the synchronized block for **get** and **containsKey** methods, making it more efficient.
+
+### 3. **Performance**
+
+- **`Hashtable`:**  
+  Since `Hashtable` is synchronized at the method level, it can become a performance bottleneck under high concurrency, as it allows only one thread to access the map at a time.
+
+- **`ConcurrentHashMap`:**  
+  Uses a finer-grained locking mechanism. It locks only a portion (segment) of the map, allowing multiple threads to access different segments concurrently, thus improving performance.
+
+### 4. **Method Synchronization**
+
+- **`Hashtable`:**  
+  All methods in `Hashtable` are synchronized, meaning only one thread can access any method at a time.
+
+- **`ConcurrentHashMap`:**  
+  Uses **lock striping** and only locks small parts of the map (segments), enabling better concurrency. It locks individual segments rather than the entire map, allowing multiple threads to operate on different segments simultaneously.
+
+### 5. **Usage Context**
+
+- **`Hashtable`:**  
+  Typically used in older Java codebases, but due to its limitations in scalability and concurrency, it is now considered obsolete.
+
+- **`ConcurrentHashMap`:**  
+  A preferred choice for modern Java applications when working with concurrent programming, as it is designed specifically for high concurrency.
+
+### 6. **Iterator Behavior**
+
+- **`Hashtable`:**  
+  The `Iterator` returned by `Hashtable` is **not fail-fast**. This means that if the map is modified while iterating over it, it may or may not throw an exception.
+
+- **`ConcurrentHashMap`:**  
+  The `Iterator` returned by `ConcurrentHashMap` is **fail-safe**, meaning it will not throw `ConcurrentModificationException` even if the map is modified while iterating. However, it might reflect inconsistent data due to concurrent changes.
+
+### 7. **Legacy vs Modern**
+
+- **`Hashtable`:**  
+  `Hashtable` is part of the original version of Java and is considered a **legacy** class. It has been largely replaced by more modern alternatives like `ConcurrentHashMap` and `HashMap`.
+
+- **`ConcurrentHashMap`:**  
+  `ConcurrentHashMap` is part of the **java.util.concurrent** package introduced in Java 5 and is designed specifically to handle multi-threaded scenarios efficiently.
+
+### Summary Table
+
+| Feature                    | `Hashtable`                 | `ConcurrentHashMap`               |
+| -------------------------- | --------------------------- | --------------------------------- |
+| **Thread Safety**          | Synchronized (method level) | Fine-grained locking              |
+| **Null Keys/Values**       | Not allowed                 | Not allowed                       |
+| **Performance**            | Poor in high concurrency    | Efficient with concurrency        |
+| **Method Synchronization** | All methods synchronized    | Lock striping, segment locks      |
+| **Usage**                  | Legacy                      | Modern, preferred for concurrency |
+| **Iterator Behavior**      | Not fail-fast               | Fail-safe                         |
+
+---
+
+## 9. Difference Between `HashMap`, `ConcurrentHashMap`, and `Hashtable`
+
+### 1. **Thread Safety**
+
+- **`HashMap`:**  
+  `HashMap` is **not synchronized**, meaning it is **not thread-safe**. It is not suitable for concurrent access by multiple threads unless external synchronization is applied.
+
+- **`ConcurrentHashMap`:**  
+  `ConcurrentHashMap` is designed for **high concurrency**. It allows concurrent access to the map by multiple threads without the need for external synchronization. It uses **fine-grained locking** to allow multiple threads to access different segments of the map simultaneously.
+
+- **`Hashtable`:**  
+  `Hashtable` is **synchronized** at the method level, which makes it **thread-safe**. However, this can lead to performance bottlenecks in multi-threaded environments, as only one thread can access any method of `Hashtable` at a time.
+
+### 2. **Null Keys and Null Values**
+
+- **`HashMap`:**  
+  `HashMap` allows **one null key** and **multiple null values**. It can store `null` as a key and as a value without any issues.
+
+- **`ConcurrentHashMap`:**  
+  `ConcurrentHashMap` does **not allow `null` keys or `null` values**. It throws `NullPointerException` if you attempt to insert a `null`.
+
+- **`Hashtable`:**  
+  `Hashtable` also **does not allow `null` keys or `null` values**. Attempting to insert a `null` will throw `NullPointerException`.
+
+### 3. **Performance**
+
+- **`HashMap`:**  
+  Since `HashMap` is not synchronized, it is generally faster than `Hashtable` and `ConcurrentHashMap` in non-concurrent environments.
+
+- **`ConcurrentHashMap`:**  
+  `ConcurrentHashMap` provides better **concurrent performance** than `Hashtable`. It is optimized for concurrent access, making it more efficient than `Hashtable` under high concurrency conditions.
+
+- **`Hashtable`:**  
+  Due to **method-level synchronization**, `Hashtable` tends to be slower in multi-threaded environments, especially when the number of threads is high.
+
+### 4. **Iterator Behavior**
+
+- **`HashMap`:**  
+  The iterator returned by `HashMap` is **fail-fast**, meaning that if the map is modified while iterating (except through the iterator), a `ConcurrentModificationException` will be thrown.
+
+- **`ConcurrentHashMap`:**  
+  The iterator returned by `ConcurrentHashMap` is **fail-safe**. It does not throw a `ConcurrentModificationException` if the map is modified while iterating, although it might show inconsistent data due to concurrent changes.
+
+- **`Hashtable`:**  
+  The iterator returned by `Hashtable` is **not fail-fast**. Modifying the map while iterating might or might not cause an exception, depending on the situation.
+
+### 5. **Use Cases**
+
+- **`HashMap`:**  
+  `HashMap` is best used in single-threaded applications or when you handle synchronization externally (like using `Collections.synchronizedMap()`).
+
+- **`ConcurrentHashMap`:**  
+  `ConcurrentHashMap` is ideal when working in multi-threaded environments and when you need high concurrency and performance with thread-safe operations.
+
+- **`Hashtable`:**  
+  `Hashtable` is considered **legacy** and is not generally recommended for new development. It is primarily found in older codebases and replaced by `ConcurrentHashMap` for concurrent use cases.
+
+### 6. **Locking Mechanism**
+
+- **`HashMap`:**  
+  No locking mechanism; it is not thread-safe.
+
+- **`ConcurrentHashMap`:**  
+  Uses **fine-grained locking** (also known as lock striping) where only small portions (segments) of the map are locked, allowing higher concurrency. It uses a **segment lock** rather than a global lock for the entire map.
+
+- **`Hashtable`:**  
+  Uses **single global lock** for the entire map, which can cause performance issues in multi-threaded applications due to thread contention.
+
+### 7. **Legacy vs Modern**
+
+- **`HashMap`:**  
+  A modern, widely used class for non-thread-safe scenarios.
+
+- **`ConcurrentHashMap`:**  
+  A modern class specifically designed for concurrent applications, preferred in multi-threaded environments.
+
+- **`Hashtable`:**  
+  A legacy class from the early Java versions that has been largely replaced by `ConcurrentHashMap` and `HashMap` in new development.
+
+### Summary Table
+
+| Feature               | `HashMap`                                 | `ConcurrentHashMap`                                      | `Hashtable`                           |
+| --------------------- | ----------------------------------------- | -------------------------------------------------------- | ------------------------------------- |
+| **Thread Safety**     | Not synchronized                          | Fine-grained locking, thread-safe                        | Synchronized (method level)           |
+| **Null Keys/Values**  | Allows `null` keys and values             | Does not allow `null` keys and values                    | Does not allow `null` keys and values |
+| **Performance**       | Fast in single-threaded contexts          | Optimized for concurrency, better performance under load | Slower due to synchronization         |
+| **Iterator Behavior** | Fail-fast                                 | Fail-safe                                                | Not fail-fast                         |
+| **Usage**             | Single-threaded, external synchronization | High concurrency, modern applications                    | Legacy, older codebases               |
+| **Locking Mechanism** | No locks                                  | Segment-level locking                                    | Global lock                           |
+
+---
+
+## 10. Difference Between Observable and Promise
 
 | Feature            | Observable | Promise |
 | ------------------ | ---------- | ------- |
@@ -198,7 +361,7 @@ This ensures that the `addBook` method is wrapped in a transaction.
 
 ---
 
-## 9. Creating a Custom Immutable Class
+## 11. Creating a Custom Immutable Class
 
 ### Rules for Creating an Immutable Class in Java:
 
@@ -272,7 +435,7 @@ public final class ImmutableClass {
 
 ---
 
-## 10. Custom Linked List and Swap Nodes
+## 12. Custom Linked List and Swap Nodes
 
 ```java
 class Node {
@@ -323,7 +486,7 @@ class LinkedList {
 
 ---
 
-## 11. Find Missing Element in Array from range 1 to 10
+## 13. Find Missing Element in Array from range 1 to 10
 
 ```java
 public class MissingNumber {
@@ -338,7 +501,7 @@ public class MissingNumber {
 
 ---
 
-## 12. What is `@Qualifier`?
+## 14. What is `@Qualifier`?
 
 It is used to resolve bean conflicts when multiple beans of the same type exist.
 
@@ -350,19 +513,19 @@ private MyService myService;
 
 ---
 
-## 13. Why Use Interface with `@Autowired`?
+## 15. Why Use Interface with `@Autowired`?
 
 Using interfaces promotes loose coupling and enables dependency injection flexibility.
 
 ---
 
-## 14. Can We Use a Class Instead of an Interface in `@Autowired`?
+## 16. Can We Use a Class Instead of an Interface in `@Autowired`?
 
 Yes, but using a class instead of an interface reduces flexibility and breaks the Dependency Inversion Principle, effectively tightly coupling the code.
 
 ---
 
-## 15. Do We Need an Interface for `@Autowired`?
+## 17. Do We Need an Interface for `@Autowired`?
 
 No, you can directly use a class, but it’s not a best practice.
 
