@@ -69,6 +69,8 @@ Occurs when an initial query loads a list of entities, but additional queries fe
 
 ## 7. Hibernate Features
 
+**Answer:**
+
 ### 1. **Lazy & Eager Loading**
 
 **Explanation:**
@@ -91,8 +93,6 @@ public class Author {
 ```
 
 In this example, `books` will be lazily loaded, while `booksEager` will be eagerly loaded.
-
----
 
 ### 2. **Caching (First & Second Level)**
 
@@ -118,8 +118,6 @@ For example:
 Book book = entityManager.find(Book.class, 1);  // First-level cache in action
 ```
 
----
-
 ### 3. **Criteria API for Querying**
 
 **Explanation:**  
@@ -144,8 +142,6 @@ public List<Book> findBooksByTitle(String title) {
 
 This query dynamically selects books based on the provided title.
 
----
-
 ### 4. **Automatic Schema Generation**
 
 **Explanation:**  
@@ -163,8 +159,6 @@ spring.jpa.hibernate.ddl-auto=update  # or 'create' for a fresh schema, 'validat
 - `update`: Updates the existing schema to match the entity model.
 - `validate`: Validates that the schema matches the entity model (without making any changes).
 - `none`: Disables automatic schema generation.
-
----
 
 ### 5. **Transaction Management**
 
@@ -220,6 +214,62 @@ This ensures that the `addBook` method is wrapped in a transaction.
 ## 9. Creating a Custom Immutable Class
 
 **Answer:**
+
+### Rules for Creating an Immutable Class in Java:
+
+1. **Declare the class as `final`**  
+   The class itself should be `final` to prevent subclassing. Subclassing could allow modification of the object's state.
+
+   ```java
+   public final class Person {
+       // Fields and methods
+   }
+   ```
+
+2. **Make all fields `private` and `final`**  
+   The fields should be `private` to restrict direct access and `final` to ensure they are only assigned once.
+
+   ```java
+   private final String name;
+   private final int age;
+   ```
+
+3. **Do not provide setters**  
+   To ensure that the fields cannot be modified after the object is created, do not provide setter methods.
+
+4. **Initialize all fields through the constructor**  
+   Initialize all fields in the constructor so that they are set during object creation. The constructor should be the only way to modify the fields.
+
+   ```java
+   public Person(String name, int age) {
+       this.name = name;
+       this.age = age;
+   }
+   ```
+
+5. **Ensure deep copying for mutable objects**  
+   If the class contains fields that are mutable objects (e.g., arrays, collections, etc.), make sure to either:
+
+   - **Copy the object** during construction and provide a copy when accessed.
+   - **Use immutable objects** for the fields.
+
+   ```java
+   private final List<String> hobbies;
+
+   public Person(String name, int age, List<String> hobbies) {
+       this.name = name;
+       this.age = age;
+       // Create a defensive copy to prevent external modifications
+       this.hobbies = new ArrayList<>(hobbies);
+   }
+
+   public List<String> getHobbies() {
+       return new ArrayList<>(hobbies);  // Returning a copy, not the original list
+   }
+   ```
+
+6. **Return copies for mutable objects**  
+   When exposing mutable objects (like arrays or lists), always return a copy of the object, not the original reference, to maintain immutability.
 
 ```java
 public final class ImmutableClass {
