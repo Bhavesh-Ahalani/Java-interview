@@ -417,7 +417,7 @@ Runnable runnable = new Runnable() {
 Runnable runnable = () -> System.out.println("Hello World!");
 ```
 
-### 2. Streams API
+#### 2. Streams API
 
 The Streams API enables functional-style operations on streams of elements. A Stream represents a sequence of elements and supports various operations that can be chained to produce a desired result. It promotes parallel processing and helps write more concise and maintainable code.
 
@@ -431,7 +431,7 @@ names.stream()
      .forEach(System.out::println);
 ```
 
-### 3. Functional Interfaces
+#### 3. Functional Interfaces
 
 Functional interfaces are interfaces that contain exactly one abstract method. They can have multiple default or static methods but must have only one abstract method. Java 8 introduced the @FunctionalInterface annotation to mark these interfaces.
 
@@ -448,7 +448,7 @@ Consumer<String> consumer = str -> System.out.println(str);
 Function<String, Integer> function = str -> str.length();
 ```
 
-### 4. Default and Static Methods in Interfaces
+#### 4. Default and Static Methods in Interfaces
 
 Default methods enable adding new methods to interfaces without breaking existing implementation classes. Static methods in interfaces help organize helper methods specific to an interface's purpose.
 
@@ -466,7 +466,7 @@ interface Vehicle {
 }
 ```
 
-### 5. New Date and Time API (java.time)
+#### 5. New Date and Time API (java.time)
 
 The java.time package provides a comprehensive date and time API that addresses the shortcomings of older date/time classes. It's immutable and thread-safe.
 
@@ -479,7 +479,7 @@ LocalDateTime dateTime = LocalDateTime.now();
 ZonedDateTime zonedDateTime = ZonedDateTime.now();
 ```
 
-### 6. Optional Class
+#### 6. Optional Class
 
 Optional is a container object that may or may not contain a non-null value. It helps prevent null pointer exceptions and provides a clear way to handle null values.
 
@@ -492,7 +492,7 @@ String result = optional.orElse("Default");
 optional.ifPresent(str -> System.out.println(str));
 ```
 
-### 7. Method References
+#### 7. Method References
 
 Method references provide a way to refer to methods or constructors without executing them. They can be seen as shorthand notation for lambda expressions that only call a specific method.
 
@@ -506,7 +506,7 @@ Consumer<String> lambda = str -> System.out.println(str);
 Consumer<String> methodRef = System.out::println;
 ```
 
-### 8. Nashorn JavaScript Engine
+#### 8. Nashorn JavaScript Engine
 
 Nashorn is a JavaScript engine developed to replace the older Rhino. It provides better performance and enables running JavaScript code from Java applications.
 
@@ -518,7 +518,7 @@ ScriptEngine engine = manager.getEngineByName("nashorn");
 engine.eval("print('Hello from JavaScript!');");
 ```
 
-## Conclusion
+### Conclusion
 
 Java 8 brought significant improvements to the language, making it more functional and expressive. These features have become fundamental to modern Java development, improving code readability, maintainability, and performance.
 
