@@ -905,3 +905,169 @@ public class Demo {
 | Same-Type Operation | `UnaryOperator<T>`, `BinaryOperator<T>` | In-place operations   |
 
 ---
+
+## 17. How Different Services Communicate
+
+When you have multiple services (like in microservice architecture), they need to exchange data. There are **two major communication styles**:
+
+### 🔹 A. Synchronous Communication
+
+Services talk **in real-time**, waiting for responses — like calling a function across services.
+
+**Common protocols:**
+
+- **HTTP/REST** → Most common, simple, text-based, easy to debug.
+- **gRPC** → High-performance, binary protocol built on HTTP/2 (faster, schema-based via Protobuf).
+- **GraphQL** → Flexible querying for frontend-heavy apps.
+- **SOAP** → XML-based legacy protocol (rare today).
+
+**Example:**  
+`UserService` calls `OrderService` to fetch a user’s order details via a REST API.
+
+✅ Pros:
+
+- Simple and easy to implement
+- Request/response pattern fits most web use cases
+
+⚠️ Cons:
+
+- Tight coupling — if one service is down, others can fail
+- Harder to scale in high-traffic systems
+
+---
+
+### 🔹 B. Asynchronous Communication (Event-Driven)
+
+Services communicate **via events or messages**. The sender doesn’t wait for a response.
+
+**Common approaches:**
+
+- Message Queues (e.g., RabbitMQ, ActiveMQ)
+- Event Streams (e.g., Apache Kafka)
+- Pub/Sub Systems (e.g., Google Pub/Sub, AWS SNS)
+
+**Example:**  
+When an order is placed, `OrderService` publishes an event → `PaymentService` and `InventoryService` consume it asynchronously.
+
+✅ Pros:
+
+- Decoupled services
+- High scalability and reliability
+- Natural fit for event-driven architectures
+
+⚠️ Cons:
+
+- Higher complexity (requires monitoring and proper event handling)
+- Eventual consistency, not instant feedback
+
+---
+
+### 🧠 Summary Table
+
+| Type             | Description                     | Examples        | Coupling | Use Case             |
+| ---------------- | ------------------------------- | --------------- | -------- | -------------------- |
+| **Synchronous**  | Direct call, waits for response | REST, gRPC      | Tight    | Real-time APIs       |
+| **Asynchronous** | Message/event-based             | Kafka, RabbitMQ | Loose    | Event-driven systems |
+
+---
+
+## 18. What is Kafka?
+
+**Apache Kafka** is a **distributed event streaming platform** used for building **real-time data pipelines and event-driven systems**.
+
+It works like a **durable, high-throughput message broker**, but with **stream processing** capabilities.
+
+---
+
+### 🔹 Core Concepts
+
+| Concept            | Description                                    |
+| ------------------ | ---------------------------------------------- |
+| **Producer**       | Sends messages to Kafka topics                 |
+| **Consumer**       | Reads messages from topics                     |
+| **Topic**          | Logical channel or category of messages        |
+| **Partition**      | Subdivision of a topic for parallel processing |
+| **Broker**         | Kafka server that stores topics and messages   |
+| **Consumer Group** | Set of consumers sharing a topic load          |
+
+---
+
+### 🔹 How Kafka Works
+
+1. **Producer** sends data to a **topic**.
+2. Kafka stores the data in **partitions** (replicated across brokers).
+3. **Consumers** read messages from those partitions at their own pace.
+4. Data can be reprocessed since it’s persisted (not deleted immediately).
+
+---
+
+### 🔹 Where Kafka is Used
+
+| Use Case                       | Example                                             |
+| ------------------------------ | --------------------------------------------------- |
+| **Event-driven microservices** | Order placed → trigger notification, billing, etc.  |
+| **Real-time analytics**        | Tracking user clicks, transactions, etc.            |
+| **Log aggregation**            | Collecting logs from multiple systems               |
+| **Stream processing**          | Fraud detection, recommendation engines             |
+| **Data pipelines**             | Move data between databases or systems in real time |
+
+---
+
+### ✅ Kafka Strengths
+
+- High throughput & scalability (millions of messages/sec)
+- Durable (messages stored on disk, replicated)
+- Replay capability (consumers can re-read)
+- Ideal for event streaming & data integration
+
+⚠️ Challenges:
+
+- Setup & ops are complex
+- Not ideal for simple queue use cases
+- Requires schema management (e.g., using Schema Registry)
+
+---
+
+## 19. Kafka vs RabbitMQ
+
+Both are **message brokers**, but they serve **different purposes**.
+
+| Feature               | **Kafka**                                       | **RabbitMQ**                             |
+| --------------------- | ----------------------------------------------- | ---------------------------------------- |
+| **Type**              | Distributed Event Streaming Platform            | Traditional Message Broker               |
+| **Message Model**     | Publish-subscribe (topics)                      | Queue-based                              |
+| **Message Retention** | Messages stored for configurable time           | Removed once consumed                    |
+| **Throughput**        | Very high (100k–1M+ msgs/sec)                   | Moderate (~tens of thousands/sec)        |
+| **Ordering**          | Guaranteed per partition                        | Guaranteed per queue                     |
+| **Persistence**       | Disk-based, durable                             | Optional (in-memory or disk)             |
+| **Scalability**       | Horizontal, easy with partitions                | Harder, needs clustering                 |
+| **Use Case**          | Event-driven architecture, streaming, analytics | Traditional async tasks, RPC, job queues |
+| **Consumer Behavior** | Can reprocess messages (offsets)                | Once consumed, message is gone           |
+| **Setup Complexity**  | Higher                                          | Easier                                   |
+
+---
+
+### When to Use What
+
+| Use Case                                    | Choose      |
+| ------------------------------------------- | ----------- |
+| Real-time data pipelines                    | ✅ Kafka    |
+| Logging, analytics, stream processing       | ✅ Kafka    |
+| Simple async communication                  | ✅ RabbitMQ |
+| Task/job queues                             | ✅ RabbitMQ |
+| Need message replay or persistence          | ✅ Kafka    |
+| Need message acknowledgment and retry logic | ✅ RabbitMQ |
+
+---
+
+### 💡 TL;DR Summary
+
+| Category        | Kafka                                | RabbitMQ                  |
+| --------------- | ------------------------------------ | ------------------------- |
+| **Model**       | Event Streaming                      | Message Queue             |
+| **Ideal For**   | Data pipelines, real-time processing | Work queues, RPC          |
+| **Storage**     | Persistent, replayable               | Temporary (consumed once) |
+| **Performance** | Blazing fast                         | Moderate                  |
+| **Complexity**  | High                                 | Medium                    |
+
+---
