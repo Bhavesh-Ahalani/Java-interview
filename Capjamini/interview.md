@@ -194,23 +194,233 @@ Future<String> future = executor.submit(() -> "Task Result");
 
 ## 8. Configure Two Different Databases in a Spring Boot App
 
+When your Spring Boot application needs to connect to multiple databases (for example, PostgreSQL for user data and MySQL for orders), you need to configure **two separate DataSources**, **EntityManagerFactories**, and **TransactionManagers**.
+
+---
+
+### 🧩 Scenario
+
+Example setup:
+
+- **User DB:** PostgreSQL
+- **Order DB:** MySQL
+
+---
+
+### 1️⃣ Add Configuration in `application.yml`
+
+```yaml
+spring:
+  datasource:
+    userdb:
+      url: jdbc:postgresql://localhost:5432/userdb
+      username: postgres
+      password: secret
+      driver-class-name: org.postgresql.Driver
+
+    orderdb:
+      url: jdbc:mysql://localhost:3306/orderdb
+      username: root
+      password: root
+      driver-class-name: com.mysql.cj.jdbc.Driver
+```
+
+---
+
+### 2️⃣ Create Entities
+
+#### User Entity
+
+```java
+@Entity
+@Table(name = "users")
+public class User {
+    @Id
+    private Long id;
+    private String name;
+}
+```
+
+#### Order Entity
+
+```java
+@Entity
+@Table(name = "orders")
+public class Order {
+    @Id
+    private Long id;
+    private String product;
+}
+```
+
+---
+
+### 3️⃣ Create Repositories
+
+#### User Repository
+
+```java
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {}
+```
+
+#### Order Repository
+
+```java
+@Repository
+public interface OrderRepository extends JpaRepository<Order, Long> {}
+```
+
+---
+
+### 4️⃣ Configure the Primary Database (User DB)
+
 ```java
 @Configuration
-public class MultipleDBConfig {
+@EnableTransactionManagement
+@EnableJpaRepositories(
+        basePackages = "com.example.user",
+        entityManagerFactoryRef = "userEntityManagerFactory",
+        transactionManagerRef = "userTransactionManager"
+)
+public class UserDBConfig {
+
     @Primary
-    @Bean(name = "db1DataSource")
-    @ConfigurationProperties(prefix = "spring.datasource.db1")
-    public DataSource db1DataSource() {
+    @Bean(name = "userDataSource")
+    @ConfigurationProperties(prefix = "spring.datasource.userdb")
+    public DataSource userDataSource() {
         return DataSourceBuilder.create().build();
     }
 
-    @Bean(name = "db2DataSource")
-    @ConfigurationProperties(prefix = "spring.datasource.db2")
-    public DataSource db2DataSource() {
-        return DataSourceBuilder.create().build();
+    @Primary
+    @Bean(name = "userEntityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean userEntityManagerFactory(
+            EntityManagerFactoryBuilder builder,
+            @Qualifier("userDataSource") DataSource dataSource
+    ) {
+        return builder
+                .dataSource(dataSource)
+                .packages("com.example.user")
+                .persistenceUnit("userdb")
+                .build();
+    }
+
+    @Primary
+    @Bean(name = "userTransactionManager")
+    public PlatformTransactionManager userTransactionManager(
+            @Qualifier("userEntityManagerFactory") EntityManagerFactory emf
+    ) {
+        return new JpaTransactionManager(emf);
     }
 }
 ```
+
+---
+
+### 5️⃣ Configure the Secondary Database (Order DB)
+
+```java
+@Configuration
+@EnableTransactionManagement
+@EnableJpaRepositories(
+        basePackages = "com.example.order",
+        entityManagerFactoryRef = "orderEntityManagerFactory",
+        transactionManagerRef = "orderTransactionManager"
+)
+public class OrderDBConfig {
+
+    @Bean(name = "orderDataSource")
+    @ConfigurationProperties(prefix = "spring.datasource.orderdb")
+    public DataSource orderDataSource() {
+        return DataSourceBuilder.create().build();
+    }
+
+    @Bean(name = "orderEntityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean orderEntityManagerFactory(
+            EntityManagerFactoryBuilder builder,
+            @Qualifier("orderDataSource") DataSource dataSource
+    ) {
+        return builder
+                .dataSource(dataSource)
+                .packages("com.example.order")
+                .persistenceUnit("orderdb")
+                .build();
+    }
+
+    @Bean(name = "orderTransactionManager")
+    public PlatformTransactionManager orderTransactionManager(
+            @Qualifier("orderEntityManagerFactory") EntityManagerFactory emf
+    ) {
+        return new JpaTransactionManager(emf);
+    }
+}
+```
+
+---
+
+### 6️⃣ Service Layer Example
+
+```java
+@Service
+public class MultiDBService {
+
+    private final UserRepository userRepo;
+    private final OrderRepository orderRepo;
+
+    @Autowired
+    public MultiDBService(UserRepository userRepo, OrderRepository orderRepo) {
+        this.userRepo = userRepo;
+        this.orderRepo = orderRepo;
+    }
+
+    @Transactional("userTransactionManager")
+    public void saveUser(User user) {
+        userRepo.save(user);
+    }
+
+    @Transactional("orderTransactionManager")
+    public void saveOrder(Order order) {
+        orderRepo.save(order);
+    }
+}
+```
+
+---
+
+### 🧠 Key Notes for Interviews
+
+| Aspect                    | Explanation                                                                 |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Multiple DBs**          | Each needs its own DataSource, EntityManagerFactory, and TransactionManager |
+| **@Primary**              | Marks which bean should be used when multiple candidates exist              |
+| **Packages**              | Repositories and Entities must be grouped and mapped separately             |
+| **Transactions**          | Use the correct TransactionManager for each DB                              |
+| **Cross-DB Transactions** | Require a JTA (Atomikos / Bitronix) setup                                   |
+
+---
+
+### ⚡ Quick Recap
+
+```
+[UserDBConfig]
+ ├── DataSource (userDataSource)
+ ├── EntityManagerFactory (userEntityManagerFactory)
+ └── TransactionManager (userTransactionManager)
+
+[OrderDBConfig]
+ ├── DataSource (orderDataSource)
+ ├── EntityManagerFactory (orderEntityManagerFactory)
+ └── TransactionManager (orderTransactionManager)
+```
+
+---
+
+### ✅ TL;DR
+
+1. Define multiple data sources in YAML.
+2. Create config classes for each DB.
+3. Set up entity + repo packages per DB.
+4. Use the proper TransactionManager for each operation.
 
 ---
 
