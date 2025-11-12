@@ -905,16 +905,3 @@ public class Demo {
 | Same-Type Operation | `UnaryOperator<T>`, `BinaryOperator<T>` | In-place operations   |
 
 ---
-
-#### 💬 Pro Tip
-
-When using Java Streams, you’ll often see:
-
-- `filter()` → uses `Predicate`
-- `map()` → uses `Function`
-- `forEach()` → uses `Consumer`
-- `collect()` → uses `Supplier` and `BiConsumer` internally
-
-So mastering these interfaces = mastering Streams.
-
----
