@@ -683,3 +683,162 @@ public class PalindromeFilter {
     }
 }
 ```
+
+## 17. API Gateway vs Service Discovery — Detailed Interview Notes
+
+In microservice architectures, two core components handle routing and service management — **API Gateway** and **Service Discovery**.  
+They sound similar but serve _different_ purposes and usually work **together**.
+
+---
+
+### ⚙️ 1️⃣ API Gateway
+
+#### 🔹 What It Is
+
+An **API Gateway** is the **single entry point** for all client requests.  
+It acts as a **reverse proxy**, routing external traffic to the correct internal microservice.
+
+#### 🔹 Responsibilities
+
+- Routes requests to appropriate microservices
+- Authentication and authorization
+- Rate limiting, caching, and throttling
+- Load balancing (via service registry or internal config)
+- Response aggregation from multiple services
+- Logging and monitoring of requests
+
+#### 🔹 Example Tools
+
+- **Spring Cloud Gateway**
+- **Kong**
+- **Zuul**
+- **Traefik**
+- **NGINX**
+- **AWS API Gateway**
+
+#### ⚙️ Example Flow
+
+```
+Client → API Gateway → OrderService / PaymentService / UserService
+```
+
+The client only knows the gateway’s URL, not internal service endpoints.
+
+---
+
+### 🧭 2️⃣ Service Discovery
+
+#### 🔹 What It Is
+
+In a distributed microservices setup, service instances **scale up/down dynamically**, so hardcoding URLs isn’t practical.  
+**Service Discovery** allows services to **find and communicate** with each other automatically.
+
+#### 🔹 Responsibilities
+
+- Registers new service instances dynamically
+- Provides lookup for live service locations (host + port)
+- Handles service deregistration when instances shut down
+- Works with load balancers or gateways to route traffic
+
+#### 🔹 Example Tools
+
+- **Netflix Eureka**
+- **Consul**
+- **Zookeeper**
+- **Kubernetes Service Registry**
+
+#### ⚙️ Example Flow
+
+```
+1. OrderService registers itself with Eureka.
+2. PaymentService queries Eureka to find OrderService.
+3. Eureka returns active instance details.
+```
+
+---
+
+### 🧠 3️⃣ Key Differences
+
+| Feature              | **API Gateway**                   | **Service Discovery**               |
+| -------------------- | --------------------------------- | ----------------------------------- |
+| **Purpose**          | Entry point for external clients  | Registry for internal services      |
+| **Scope**            | External (client → service)       | Internal (service ↔ service)        |
+| **Responsibility**   | Routing, auth, aggregation        | Registration, lookup, health checks |
+| **Knows About**      | External routes                   | Live service instances              |
+| **Traffic Type**     | North–South (external → internal) | East–West (internal ↔ internal)     |
+| **Example Tools**    | Spring Cloud Gateway, Zuul, Kong  | Eureka, Consul, Zookeeper           |
+| **Failure Handling** | Fallback routes, rate limiting    | Health checks, re-registration      |
+| **Use Case**         | Client communication              | Inter-service communication         |
+
+---
+
+### 🔗 4️⃣ How They Work Together
+
+They often **work in combination**:
+
+```text
+Client → API Gateway → Service Discovery → Microservice
+```
+
+- API Gateway queries **Service Discovery** to find the live address of a microservice.
+- The gateway then routes the client’s request accordingly.
+
+**Example:**  
+Spring Cloud Gateway uses **Eureka** to discover services dynamically instead of using static URLs.
+
+---
+
+### 🧩 5️⃣ Architecture Overview
+
+```plaintext
++-------------+         +---------------+         +----------------+
+|   Client    |  --->   |  API Gateway  |  --->   |  Eureka Server |
+| (Web/Mobile)|         | (Reverse Proxy)|         | (Service Registry)|
++-------------+         +---------------+         +----------------+
+                              |                             |
+                              v                             v
+                        +-------------+            +-----------------+
+                        | OrderService| <--------> | PaymentService  |
+                        +-------------+            +-----------------+
+```
+
+---
+
+### ⚡ 6️⃣ Example Integration (Spring Cloud Netflix Stack)
+
+| Component                              | Role                                         |
+| -------------------------------------- | -------------------------------------------- |
+| **Eureka Server**                      | Service registry (discovery)                 |
+| **Zuul / Spring Cloud Gateway**        | API Gateway                                  |
+| **Ribbon / Spring Cloud LoadBalancer** | Client-side load balancing using Eureka info |
+
+**Request Flow:**
+
+```
+Client → API Gateway → Eureka → Target Microservice
+```
+
+---
+
+### 🧠 7️⃣ Common Interview Questions
+
+| Question                   | Sample Answer                                                                                                                                    |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| What is an API Gateway?    | It’s the single entry point that routes external requests to internal microservices, handling authentication, rate limiting, and load balancing. |
+| What is Service Discovery? | It allows microservices to find and communicate with each other dynamically without hardcoded URLs.                                              |
+| How do they work together? | The API Gateway queries the Service Discovery registry to find the live instance of a target service and routes the request.                     |
+| Example in Spring Cloud?   | Eureka (discovery) + Spring Cloud Gateway (gateway).                                                                                             |
+
+---
+
+### ✅ TL;DR Summary
+
+| Category            | API Gateway                                          | Service Discovery                             |
+| ------------------- | ---------------------------------------------------- | --------------------------------------------- |
+| **Main Role**       | Handles external client requests                     | Tracks and manages internal service instances |
+| **Used By**         | External clients                                     | Internal microservices                        |
+| **Type of Traffic** | North-South                                          | East-West                                     |
+| **Example**         | Spring Cloud Gateway                                 | Netflix Eureka                                |
+| **Combined Use**    | Gateway uses Discovery to dynamically route requests |
+
+---
